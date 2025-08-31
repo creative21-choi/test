@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Example</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    #weather {
+      font-size: 24px;
+    }
+    h1 {
+      font-size: 32px;
+    }
+  </style>
+</head>
+<body>
+  <h1>현재 날씨</h1>
+  <div id="weather">날씨 정보를 불러오는 중...</div>
+  <script>
+  // 위치 정보
+  const city = "서울";
+  const lat = 37.5665;
+  const lon = 126.9780;
+  fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
+    .then(response => response.json())
+    .then(data => {
+      const weather = data.current_weather;
+      const temp = weather.temperature;
+      let icon = "";
+      if (temp >= 25) {
+        icon = "☀️"; // 더움
+      } else if (temp >= 10) {
+        icon = "🌤️"; // 보통
+      } else {
+        icon = "❄️"; // 추움
+      }
+      document.getElementById('weather').innerHTML =
+        `<h1><strong>위치: ${city}</strong><br>` +
+        `온도: ${temp}°C ${icon}<br>` +
+        `풍속: ${weather.windspeed} km/h<br>` +
+        `날씨 코드: ${weather.weathercode}</h1>`;
+    })
+    .catch(() => {
+      document.getElementById('weather').innerText = '날씨 정보를 불러올 수 없습니다.';
+    });
+  </script>
+</body>
+</html>
